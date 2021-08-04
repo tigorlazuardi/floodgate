@@ -3,3 +3,5 @@ pre-commit:
   commands:
     test:
       run: go test ./... -coverprofile=c.out
+    cover:
+      run: go tool cover -func=c.out
