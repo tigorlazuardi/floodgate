@@ -79,3 +79,22 @@ func TestGateError_MarshalJSON(t *testing.T) {
 		})
 	}
 }
+
+func TestGateError_Error(t *testing.T) {
+	ge := GateError{
+		Err: "test",
+	}
+	got := ge.Error()
+	want := "test"
+	assert.Equal(t, want, got)
+}
+
+func TestGateError_String(t *testing.T) {
+	ge := GateError{
+		Err:  "test",
+		Name: "some service",
+	}
+	got := ge.String()
+	want := "service 'some service' returned error: 'test'"
+	assert.Equal(t, want, got)
+}

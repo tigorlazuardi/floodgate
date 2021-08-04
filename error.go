@@ -24,7 +24,7 @@ func (ge GateError) Error() string {
 }
 
 func (ge GateError) String() string {
-	return fmt.Sprintf("service '%s' return error: '%s'", ge.Name, ge.Err)
+	return fmt.Sprintf("service '%s' returned error: '%s'", ge.Name, ge.Err)
 }
 
 func (ge GateError) MarshalJSON() ([]byte, error) {
