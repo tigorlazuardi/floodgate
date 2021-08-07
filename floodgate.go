@@ -68,3 +68,24 @@ func NewGate(timeout time.Duration, interval time.Duration) *Gate {
 		reporters: []ReportCallerFunc{},
 	}
 }
+
+func (gate *Gate) AddReportCaller(f ...ReportCallerFunc) *Gate {
+	gate.mu.Lock()
+	gate.reporters = append(gate.reporters, f...)
+	gate.mu.Unlock()
+	return gate
+}
+
+func (gate *Gate) SetInterval(t time.Duration) *Gate {
+	gate.mu.Lock()
+	gate.interval = t
+	gate.mu.Unlock()
+	return gate
+}
+
+func (gate *Gate) SetTimeout(t time.Duration) *Gate {
+	gate.mu.Lock()
+	gate.timeout = t
+	gate.mu.Unlock()
+	return gate
+}
