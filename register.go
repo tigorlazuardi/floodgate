@@ -3,6 +3,7 @@ package floodgate
 import (
 	"context"
 	"errors"
+	"net/http"
 )
 
 func (gate *Gate) RegisterService(name string, f CheckerFunc) *Gate {
@@ -29,6 +30,29 @@ func (gate *Gate) RegisterService(name string, f CheckerFunc) *Gate {
 func (gate *Gate) RegisterHandler(name string, c Checker) *Gate {
 	gate.mu.Lock()
 	gate.services[name] = c
+	gate.mu.Unlock()
+	return gate
+}
+
+/*
+RegisterHTTPService checks an endpoint and see if the returned endpoint returned status code under codeTreshold.
+
+If there's an error on attempting connection, it will be marked as unhealthy.
+
+If status code is equal or higher than codeTreshold, it will be marked as unhealthy.
+
+Request is always using method GET and no request body is sent.
+*/
+func (gate *Gate) RegisterHTTPService(name string, url string, codeTreshold int, client Doer) *Gate {
+	if client == nil {
+		client = http.DefaultClient
+	}
+	gate.mu.Lock()
+	gate.services[name] = &httpservice{
+		client:       client,
+		CodeTreshold: codeTreshold,
+		Url:          url,
+	}
 	gate.mu.Unlock()
 	return gate
 }
