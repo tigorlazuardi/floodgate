@@ -39,3 +39,9 @@ func (s *service) SetMessage(message string) {
 func (s service) Check(ctx context.Context) error {
 	return s.check(ctx)
 }
+
+func (s *service) Clone() Checker {
+	var c *service
+	*c = *s
+	return c
+}

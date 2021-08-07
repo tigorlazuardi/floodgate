@@ -62,3 +62,9 @@ func (h *httpservice) Check(ctx context.Context) error {
 	}
 	return nil
 }
+
+func (h *httpservice) Clone() Checker {
+	var c *httpservice
+	*c = *h
+	return c
+}

@@ -38,6 +38,10 @@ type Checker interface {
 	SetMessage(string)
 	// Given context is already with timeout set. No need to set it again.
 	Check(context.Context) error
+	// Clone must return a copy of the instance with the pointer does pointing to a new address.
+	// Clone will be called once by floodgate and distributed to the given report callers.
+	// Report callers may use goroutine or anything with the given clone. It will not affect the original in the floodgate.
+	Clone() Checker
 }
 
 type Doer interface {
@@ -51,6 +55,7 @@ type Gate struct {
 	baseCtx   context.Context
 	interval  time.Duration
 	once      *sync.Once
+	wg        *sync.WaitGroup
 	client    Doer
 	reporters []ReportCallerFunc
 }
@@ -66,6 +71,7 @@ func NewGate(timeout time.Duration, interval time.Duration) *Gate {
 		once:      &sync.Once{},
 		client:    http.DefaultClient,
 		reporters: []ReportCallerFunc{},
+		wg:        &sync.WaitGroup{},
 	}
 }
 
