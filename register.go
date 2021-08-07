@@ -58,5 +58,3 @@ func (gate *Gate) RegisterHTTPService(name string, url string, codeTreshold int,
 	gate.mu.Unlock()
 	return gate
 }
-
-
