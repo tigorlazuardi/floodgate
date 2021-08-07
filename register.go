@@ -41,6 +41,8 @@ If there's an error on attempting connection, it will be marked as unhealthy.
 
 If status code is equal or higher than codeTreshold, it will be marked as unhealthy.
 
+if client is nil, it will use http.DefaultClient.
+
 Request is always using method GET and no request body is sent.
 */
 func (gate *Gate) RegisterHTTPService(name string, url string, codeTreshold int, client Doer) *Gate {
@@ -56,3 +58,5 @@ func (gate *Gate) RegisterHTTPService(name string, url string, codeTreshold int,
 	gate.mu.Unlock()
 	return gate
 }
+
+
